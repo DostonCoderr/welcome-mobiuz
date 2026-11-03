@@ -1,0 +1,118 @@
+{
+  "app": {
+    "title": "Mobiuz Welcome Book",
+    "subtitle": "Yangi xodimlar uchun"
+  },
+  "nav": {
+    "home": "Asosiy",
+    "news": "Yangiliklar",
+    "sections": "Bo'limlar",
+    "feedback": "Fikr",
+    "profile": "Profil",
+    "notifications": "Xabarlar"
+  },
+  "welcome": {
+    "title": "Mobiuz'ga xush kelibsiz!",
+    "subtitle": "Sizning yangi boshlanish nuqtangiz"
+  },
+  "common": {
+    "loading": "Yuklanmoqda...",
+    "error": "Xatolik yuz berdi",
+    "retry": "Qayta urinish",
+    "back": "Orqaga",
+    "next": "Keyingi",
+    "readMore": "Batafsil",
+    "close": "Yopish",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "confirm": "Tasdiqlash",
+    "yes": "Ha",
+    "no": "Yo'q",
+    "all": "Hammasi",
+    "search": "Qidirish",
+    "noResults": "Hech narsa topilmadi",
+    "version": "Versiya"
+  },
+  "auth": {
+    "title": "Tasdiqlash",
+    "passport": "Passport seria",
+    "birthDate": "Tug'ilgan sana",
+    "verify": "Tasdiqlash",
+    "error": "Ma'lumotlar topilmadi",
+    "hrContact": "HR bo'limiga murojaat qiling"
+  },
+  "sections": {
+    "general": "Umumiy",
+    "your": "Sizning bo'limingiz",
+    "count": "{{count}} ta",
+    "empty": "Hozircha bo'limlar yo'q"
+  },
+  "news": {
+    "title": "Yangiliklar",
+    "subtitle": "So'nggi xabarlar va e'lonlar",
+    "count": "{{count}} ta yangilik",
+    "search": "Yangilik qidirish...",
+    "latest": "Eng so'nggi",
+    "empty": "Hozircha yangilik yo'q",
+    "readMore": "Batafsil",
+    "all": "Hammasi"
+  },
+  "feedback": {
+    "title": "Fikr qoldirish",
+    "subtitle": "Fikringizni bizga yuboring",
+    "rating": "Reyting",
+    "comment": "Izoh",
+    "commentPlaceholder": "Fikringizni yozing...",
+    "submit": "Yuborish",
+    "success": "Rahmat! Fikringiz yuborildi.",
+    "ratings": {
+      "1": "Juda yomon",
+      "2": "Yomon",
+      "3": "O'rtacha",
+      "4": "Yaxshi",
+      "5": "Ajoyib"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "settings": "Sozlamalar",
+    "help": "Yordam",
+    "security": "Xavfsizlik",
+    "darkMode": "Tungi rejim",
+    "language": "Til",
+    "notifications": "Bildirishnomalar",
+    "helpCenter": "Yordam markazi",
+    "notificationsCenter": "Bildirishnomalar",
+    "leaveFeedback": "Fikr qoldirish",
+    "logout": "Chiqish",
+    "logoutConfirm": "Chiqishni tasdiqlaysizmi?",
+    "verified": "Tasdiqlangan xodim",
+    "verifiedDesc": "Ma'lumotlar HR tomonidan tasdiqlangan",
+    "passport": "Pasport",
+    "birthDate": "Tug'ilgan",
+    "position": "Lavozim",
+    "department": "Bo'lim",
+    "stats": {
+      "sections": "Bo'limlar",
+      "days": "Kun",
+      "rating": "Reyting"
+    }
+  },
+  "notifications": {
+    "title": "Bildirishnomalar",
+    "subtitle": "{{count}} yangi",
+    "markAll": "Hammasi",
+    "empty": "Bildirishnomalar yo'q",
+    "demo": "Bu demo bildirishnomalar. Keyinchalik real ma'lumotlar keladi."
+  },
+  "help": {
+    "title": "Yordam markazi",
+    "subtitle": "Savollar va kontaktlar",
+    "faq": "Ko'p so'raladigan savollar",
+    "contacts": "Kontaktlar",
+    "hr": "HR bo'limi",
+    "it": "IT qo'llab-quvvatlash",
+    "security": "Xavfsizlik xizmati",
+    "feedbackCta": "Fikr qoldirish"
+  }
+}

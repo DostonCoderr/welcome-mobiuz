@@ -1,0 +1,11 @@
+# Node modullari
+node_modules
+
+# Build natijasi (agar build qilsangiz)
+dist
+
+
+# Atrof-muhit o'zgaruvchilari (Maxfiy kalitlar)
+.env
+.env.local
+.env.example
