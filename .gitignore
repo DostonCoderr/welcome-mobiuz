@@ -6,3 +6,15 @@ Thumbs.db
 # Atrof-muhit o'zgaruvchilari (Maxfiy kalitlar)
 .env
 .env.local
+
+
+
+# API
+mobiuz-api/node_modules
+mobiuz-api/dist
+mobiuz-api/.env
+
+# Admin
+mobiuz-admin/node_modules
+mobiuz-admin/dist
+mobiuz-admin/.env

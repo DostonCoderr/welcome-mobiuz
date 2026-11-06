@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: #07080b;
+    --panel: #0e1014;
+    --line: rgba(255, 255, 255, 0.08);
+    --red: #ff2b3a;
+    --red-2: #e30613;
+    --red-3: #9d0410;
+
+    /* eski nomlar (boshqa sahifalar uchun) */
+    --mobiuz-red: #e30613;
+    --mobiuz-dark: #07080b;
+    --mobiuz-card: #0e1014;
+    --mobiuz-text: #ffffff;
+    --mobiuz-muted: #a1a1aa;
+    --border: rgba(255, 255, 255, 0.08);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    overflow-x: hidden;
+    color: #fff;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    background: var(--bg);
+  }
+
+  /* Yengil "grain" qatlami */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection {
+    background: rgba(255, 43, 58, 0.5);
+    color: #fff;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.24);
+  }
+}
+
+@layer components {
+  /* ---------- Yuzalar ---------- */
+  .card {
+    position: relative;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+      var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    backdrop-filter: blur(10px);
+  }
+
+  /* Sichqoncha ortidan yuruvchi yog'du (SpotlightCard) */
+  .spot {
+    overflow: hidden;
+  }
+  .spot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 43, 58, 0.16),
+      transparent 45%
+    );
+  }
+  .spot:hover::before {
+    opacity: 1;
+  }
+
+  .glass {
+    background: rgba(14, 16, 20, 0.84);
+    backdrop-filter: blur(26px) saturate(150%);
+    border: 1px solid var(--line);
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85);
+  }
+
+  .hero-gradient {
+    background: linear-gradient(160deg, #f5222f 0%, #e30613 55%, #b00410 100%);
+  }
+  .hero-mesh {
+    background:
+      radial-gradient(600px 300px at 90% 0%, rgba(255, 140, 90, 0.55), transparent 60%),
+      radial-gradient(500px 320px at 0% 100%, rgba(124, 92, 255, 0.4), transparent 60%),
+      linear-gradient(135deg, #ff2b3a 0%, #b00410 55%, #4a0208 100%);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 25%, #000 30%, transparent 100%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 25%, #000 30%, transparent 100%);
+  }
+
+  .text-grad {
+    background: linear-gradient(120deg, #fff 20%, #ff8a93 60%, #ff2b3a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ---------- Tugmalar ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.1rem;
+    border-radius: 14px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    color: #fff;
+    background: linear-gradient(135deg, #ff2b3a, #b00410);
+    box-shadow: 0 12px 34px -10px rgba(255, 43, 58, 0.6);
+  }
+  .btn-primary:hover:not(:disabled) {
+    filter: brightness(1.12);
+    box-shadow: 0 16px 40px -10px rgba(255, 43, 58, 0.8);
+  }
+  .btn-ghost {
+    color: #d4d4d8;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .btn-danger {
+    color: #fb7185;
+    background: rgba(244, 63, 94, 0.1);
+    border: 1px solid rgba(244, 63, 94, 0.25);
+  }
+  .btn-danger:hover:not(:disabled) {
+    background: rgba(244, 63, 94, 0.2);
+  }
+
+  /* ---------- Forma ---------- */
+  .input {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    outline: none;
+    transition: all 0.2s ease;
+  }
+  .input::placeholder {
+    color: #71717a;
+  }
+  .input:focus {
+    border-color: rgba(255, 43, 58, 0.6);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: 0 0 0 4px rgba(255, 43, 58, 0.14);
+  }
+  .label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #a1a1aa;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    padding: 2px 6px;
+    border-radius: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #d4d4d8;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom-width: 2px;
+  }
+
+  .skeleton {
+    border-radius: 20px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.04) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s linear infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translate3d(0, -10vh, 0);
+  }
+  100% {
+    transform: translate3d(24px, 110vh, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snow-layer {
+    display: none;
+  }
+}
