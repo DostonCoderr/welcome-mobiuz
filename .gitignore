@@ -1,0 +1,34 @@
+# Umumiy keraksiz fayllar
+.DS_Store
+Thumbs.db
+*.log
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.production
+.env.development
+
+# Build
+dist/
+build/
+
+# Logs
+*.log
+
+# Uploads (rasmlar)
+uploads/
+
+
+# API
+mobiuz-api/node_modules
+mobiuz-api/dist
+mobiuz-api/.env
+
+# Admin
+mobiuz-admin/node_modules
+mobiuz-admin/dist
+mobiuz-admin/.env
