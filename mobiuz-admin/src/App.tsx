@@ -13,34 +13,62 @@ import BannersPage from './pages/BannersPage';
 import FeedbacksPage from './pages/FeedbacksPage';
 import NotificationsPage from './pages/NotificationsPage';
 import SettingsPage from './pages/SettingsPage';
+import { getMe } from './api'; // 
 
 function App() {
-  const [isAuth, setIsAuth] = useState(!!localStorage.getItem('admin_token'));
+  const [authStatus, setAuthStatus] = useState<'loading' | 'auth' | 'noauth'>('loading');
+
 
   // ⚡ Tilni global holatda ishga tushirish (localStorage dan o'qiydi)
   useLang();
 
-  // Boshqa tabda login/logout bo'lsa holatni yangilash
-  useEffect(() => {
-    const sync = () => setIsAuth(!!localStorage.getItem('admin_token'));
-    window.addEventListener('storage', sync);
-    return () => window.removeEventListener('storage', sync);
+useEffect(() => {
+    // Sahifa yuklanganda cookie orqali tekshiramiz
+    const checkAuth = async () => {
+      try {
+        const user = await getMe(); // Cookie avtomatik yuboriladi
+        if (user) {
+          setAuthStatus('auth');
+          // Profil ma'lumotlarini yangilab qo'yamiz
+          localStorage.setItem('admin_user', JSON.stringify(user));
+        } else {
+          setAuthStatus('noauth');
+        }
+      } catch (error) {
+        // Agar 401 bo'lsa, demak cookie yo'q yoki muddati o'tgan
+        setAuthStatus('noauth');
+        localStorage.removeItem('admin_user');
+      }
+    };
+    checkAuth();
   }, []);
+
+
+   // ⚡ API javobini kutayotganda yuklanish ekranini ko'rsatamiz
+  if (authStatus === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#07080b] text-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
+
+
 
   return (
     <ToastProvider>
       <BrowserRouter>
         <Routes>
-          <Route
+         <Route
             path="/login"
             element={
-              isAuth ? <Navigate to="/" replace /> : <LoginPage onLogin={() => setIsAuth(true)} />
+              authStatus === 'auth' ? <Navigate to="/" replace /> : <LoginPage onLogin={() => setAuthStatus('auth')} />
             }
           />
 
           <Route
             element={
-              isAuth ? <Layout onLogout={() => setIsAuth(false)} /> : <Navigate to="/login" replace />
+              authStatus === 'auth' ? <Layout onLogout={() => setAuthStatus('noauth')} /> : <Navigate to="/login" replace />
             }
           >
             <Route path="/" element={<DashboardPage />} />

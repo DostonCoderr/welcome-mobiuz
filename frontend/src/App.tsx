@@ -72,9 +72,18 @@ const checkAuth = async (): Promise<boolean> => {
         saveEmployee(emp);
         return true;
       }
+      console.warn('⚠️ Xodim bazada topilmadi, localStorage tozalanadi');
+      localStorage.removeItem('employee');
+      return false;
     }
-  } catch {
-    /* ignore */
+  } catch (e) {
+    // ⚡ TARMOQ XATOSI (masalan, ofis Wi-Fi 443-portni bloklasa)
+    // Bu holda localStorage dagi ma'lumotni O'CHIRMAYMIZ!
+    console.warn('⚠️ Tarmoq xatosi, localStorage saqlanadi:', e);
+    const stored = JSON.parse(localStorage.getItem('employee') || 'null');
+    if (stored?._id) {
+      return true; // Tarmoq xatosida ham tizimda qoldiramiz
+    }
   }
 
   localStorage.removeItem('employee');
