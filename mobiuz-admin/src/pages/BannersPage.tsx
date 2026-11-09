@@ -19,8 +19,7 @@ import { useHotkey } from '../hooks/useHotkey';
 import { downloadCSV } from '../utils/format';
 import { idOf, isValidUrl } from '../utils/text';
 
-// Backend manzili (.env da VITE_API_ORIGIN bilan o'zgartirish mumkin)
-const API_ORIGIN: string = (import.meta as any).env?.VITE_API_ORIGIN || 'http://localhost:5000';
+const API_ORIGIN: string = import.meta.env.VITE_API_URL?.replace(/\/api$/, '') || 'http://localhost:5000';
 const MAX_MB = 5;
 
 const imgUrl = (img?: string): string => {
