@@ -21,12 +21,15 @@ import { useT } from '../hooks/useT';
 import { idOf, copyText } from '../utils/text';
 import type { Lang } from '../hooks/useLang';
 
-const API_ORIGIN: string = (import.meta as any).env?.VITE_API_ORIGIN || 'http://localhost:5000';
+const API_ORIGIN: string = import.meta.env.VITE_API_URL?.replace(/\/api$/, '') || 'http://localhost:5000';
 const MAX_MB = 5;
 
 const imgUrl = (img?: string): string => {
   if (!img) return '';
-  return /^(https?:|data:|blob:)/i.test(img) ? img : `${API_ORIGIN}${img}`;
+  if (/^(https?:|data:|blob:)/i.test(img)) return img;
+  // Agar rasm manzili allaqachon /uploads/... bo'lsa
+  const cleanPath = img.startsWith('/') ? img : `/${img}`;
+  return `${API_ORIGIN}${cleanPath}`;
 };
 
 // ==================== TARJIMALAR ====================
