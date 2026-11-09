@@ -25,6 +25,25 @@ interface NavItem {
 const BOT_URL = 'https://t.me/mobiuz_welcome_bot';
 const LS_COLLAPSED = 'admin_sb_collapsed';
 
+
+
+
+const getApiBaseUrl = (): string => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  if (apiUrl) {
+    return apiUrl.replace(/\/api$/, '');
+  }
+  return 'http://localhost:5000';
+};
+
+const imgUrl = (img?: string): string => {
+  if (!img) return '';
+  if (/^(https?:|data:|blob:)/i.test(img)) return img;
+  const baseUrl = getApiBaseUrl();
+  const cleanPath = img.startsWith('/') ? img : `/${img}`;
+  return `${baseUrl}${cleanPath}`;
+};
+
 const getAdminUser = (): { name?: string; email?: string; avatar?: string } => {
   try {
     return JSON.parse(localStorage.getItem('admin_user') || '{}');
@@ -338,11 +357,7 @@ export default function Layout({ onLogout }: LayoutProps) {
             {/* ⚡ Avatar (rasm yoki harf) */}
             {user.avatar ? (
               <img
-                src={
-                  user.avatar.startsWith('http')
-                    ? user.avatar
-                    : `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${user.avatar}`
-                }
+                src={imgUrl(user.avatar)}
                 alt={user.name || 'Admin'}
                 className="h-10 w-10 shrink-0 rounded-xl object-cover"
               />
