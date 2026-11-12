@@ -276,10 +276,15 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#07080b]">
-      <Aurora />
-      <Snowfall />
+     
       <div className="absolute inset-0 bg-gradient-to-br from-[#07080b] to-[#1a0a0d]" />
       <div className="bg-grid pointer-events-none absolute inset-0 z-0 opacity-20" />
+
+      <Aurora />
+
+       <div className="pointer-events-none fixed inset-0 z-50">
+         <Snowfall />
+      </div>
 
       <div className="absolute right-4 top-4 z-30 sm:right-6 sm:top-6">
         <LangSwitch lang={lang} setLang={setLang} />
