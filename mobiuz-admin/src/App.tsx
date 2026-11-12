@@ -21,26 +21,33 @@ function App() {
   useLang();
 
   useEffect(() => {
+    let isMounted = true;
+    
     const checkAuth = async () => {
       try {
-        // Cookie orqali tekshiramiz
-        const user = await getMe(); 
-        if (user) {
-          setAuthStatus('auth');
-          localStorage.setItem('admin_user', JSON.stringify(user));
-        } else {
-          setAuthStatus('noauth');
+        const user = await getMe();
+        if (isMounted) {
+          if (user) {
+            setAuthStatus('auth');
+            localStorage.setItem('admin_user', JSON.stringify(user));
+          } else {
+            setAuthStatus('noauth');
+          }
         }
       } catch (error) {
-        // Agar 401 (Unauthorized) bo'lsa, xato bermay, noauth ga o'tamiz
-        setAuthStatus('noauth');
-        localStorage.removeItem('admin_user');
+        // Har qanday xato bo'lsa (401, 500, tarmoq), login sahifasiga o'tamiz
+        if (isMounted) {
+          setAuthStatus('noauth');
+          localStorage.removeItem('admin_user');
+        }
       }
     };
+    
     checkAuth();
+    
+    return () => { isMounted = false; };
   }, []);
 
-  // API javobini kutayotganda yuklanish ekranini ko'rsatamiz
   if (authStatus === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#07080b] text-white">
