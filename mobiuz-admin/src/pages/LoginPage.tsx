@@ -7,6 +7,8 @@ import {
   HelpCircle, KeyRound, ArrowLeft,
 } from 'lucide-react';
 import { useLang, type Lang } from '../hooks/useLang';
+import Aurora from '../components/Aurora';
+import Snowfall from '../components/Snowfall';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -274,6 +276,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#07080b]">
+      <Aurora />
+      <Snowfall />
       <div className="absolute inset-0 bg-gradient-to-br from-[#07080b] to-[#1a0a0d]" />
       <div className="bg-grid pointer-events-none absolute inset-0 z-0 opacity-20" />
 
