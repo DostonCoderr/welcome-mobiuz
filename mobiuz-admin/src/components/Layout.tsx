@@ -143,9 +143,22 @@ export default function Layout({ onLogout }: LayoutProps) {
     });
   }, []);
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = useCallback(async () => {
+    try {
+      // ⚡ API'ga logout so'rovini yuboramiz (cookie'ni o'chirish uchun)
+      await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include', // Cookie'ni yuborish va o'chirish uchun
+      });
+    } catch (error) {
+      console.error('Logout API xatosi:', error);
+    }
+
+    // Localstorage tozalash
     localStorage.removeItem('admin_token');
     localStorage.removeItem('admin_user');
+    
+    // Holatni yangilash va login sahifasiga o'tish
     onLogout?.();
     navigate('/login', { replace: true });
   }, [navigate, onLogout]);
