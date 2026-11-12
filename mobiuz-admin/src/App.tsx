@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import Layout from './components/Layout';
 import { ToastProvider } from './components/Toast';
-import { useLang } from './hooks/useLang'; // ⚡ Yangi import
+import { useLang } from './hooks/useLang';
 import DashboardPage from './pages/DashboardPage';
 import EmployeesPage from './pages/EmployeesPage';
 import DepartmentsPage from './pages/DepartmentsPage';
@@ -13,29 +13,26 @@ import BannersPage from './pages/BannersPage';
 import FeedbacksPage from './pages/FeedbacksPage';
 import NotificationsPage from './pages/NotificationsPage';
 import SettingsPage from './pages/SettingsPage';
-import { getMe } from './api'; // 
+import { getMe } from './api';
 
 function App() {
   const [authStatus, setAuthStatus] = useState<'loading' | 'auth' | 'noauth'>('loading');
 
-
-  // ⚡ Tilni global holatda ishga tushirish (localStorage dan o'qiydi)
   useLang();
 
-useEffect(() => {
-    // Sahifa yuklanganda cookie orqali tekshiramiz
+  useEffect(() => {
     const checkAuth = async () => {
       try {
-        const user = await getMe(); // Cookie avtomatik yuboriladi
+        // Cookie orqali tekshiramiz
+        const user = await getMe(); 
         if (user) {
           setAuthStatus('auth');
-          // Profil ma'lumotlarini yangilab qo'yamiz
           localStorage.setItem('admin_user', JSON.stringify(user));
         } else {
           setAuthStatus('noauth');
         }
       } catch (error) {
-        // Agar 401 bo'lsa, demak cookie yo'q yoki muddati o'tgan
+        // Agar 401 (Unauthorized) bo'lsa, xato bermay, noauth ga o'tamiz
         setAuthStatus('noauth');
         localStorage.removeItem('admin_user');
       }
@@ -43,8 +40,7 @@ useEffect(() => {
     checkAuth();
   }, []);
 
-
-   // ⚡ API javobini kutayotganda yuklanish ekranini ko'rsatamiz
+  // API javobini kutayotganda yuklanish ekranini ko'rsatamiz
   if (authStatus === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#07080b] text-white">
@@ -53,13 +49,11 @@ useEffect(() => {
     );
   }
 
-
-
   return (
     <ToastProvider>
       <BrowserRouter>
         <Routes>
-         <Route
+          <Route
             path="/login"
             element={
               authStatus === 'auth' ? <Navigate to="/" replace /> : <LoginPage onLogin={() => setAuthStatus('auth')} />
