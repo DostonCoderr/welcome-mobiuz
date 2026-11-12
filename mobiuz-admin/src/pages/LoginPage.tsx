@@ -1,15 +1,11 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import gsap from 'gsap';
 import {
-  Lock, Mail, Loader2, Eye, EyeOff, AlertCircle, ShieldCheck, Users,
-  FileText, MessageSquare, ArrowRight, ArrowUp, Sparkles, Check,
-  CheckCircle2, HelpCircle, KeyRound, ArrowLeft,
+  Lock, Mail, Loader2, Eye, EyeOff, AlertCircle, ShieldCheck,
+  ArrowRight, ArrowUp, Sparkles, Check,
+  HelpCircle, KeyRound, ArrowLeft,
 } from 'lucide-react';
-import Aurora from '../components/Aurora';
-import Snowfall from '../components/Snowfall';
-import Magnetic from '../components/Magnetic';
 import { useLang, type Lang } from '../hooks/useLang';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -26,7 +22,6 @@ const T = {
     badge: 'HR boshqaruv tizimi',
     headline: "Welcome Book'ni boshqaring.",
     sub: 'Xodimlar, maqolalar, yangiliklar va fikr-mulohazalar — hammasi bitta jonli panelda.',
-    chips: ['Xodimlar', 'Maqolalar', 'Fikrlar'],
     title: 'Xush kelibsiz',
     subtitle: 'Davom etish uchun hisobingizga kiring',
     email: 'Email',
@@ -71,7 +66,6 @@ const T = {
     badge: 'Система управления HR',
     headline: 'Управляйте Welcome Book.',
     sub: 'Сотрудники, статьи, новости и отзывы — всё в одной живой панели.',
-    chips: ['Сотрудники', 'Статьи', 'Отзывы'],
     title: 'Добро пожаловать',
     subtitle: 'Войдите в аккаунт, чтобы продолжить',
     email: 'Email',
@@ -114,12 +108,6 @@ const T = {
 
 type ErrKey = keyof (typeof T)['uz']['errors'];
 
-const FLOATERS = [
-  { icon: Users, cls: 'left-[4%] top-[58%]' },
-  { icon: FileText, cls: 'left-[38%] top-[72%]' },
-  { icon: MessageSquare, cls: 'left-[18%] top-[84%]' },
-];
-
 const LS_EMAIL = 'admin_remember_email';
 const readEmail = (): string => {
   try {
@@ -129,12 +117,10 @@ const readEmail = (): string => {
   }
 };
 
-// ==================== XSS HIMOYASI ====================
 const sanitizeInput = (input: string): string => {
   return input.trim().replace(/[<>]/g, '').slice(0, 255);
 };
 
-// ==================== TIL ALMASHTIRGICH ====================
 function LangSwitch({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void }) {
   const options: { id: Lang; label: string }[] = [
     { id: 'uz', label: "O'zbekcha" },
@@ -170,13 +156,11 @@ function LangSwitch({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void 
   );
 }
 
-// ==================== SAHIFA ====================
 export default function LoginPage({ onLogin }: LoginPageProps) {
   const { lang, setLang } = useLang();
   const t = T[lang];
   const navigate = useNavigate();
 
-  // 1-qadam holatlari (Login)
   const [email, setEmail] = useState(readEmail);
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(() => readEmail() !== '');
@@ -188,76 +172,22 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // 2-qadam (2FA)
   const [step, setStep] = useState<1 | 2>(1);
   const [userId, setUserId] = useState('');
   const [code, setCode] = useState('');
   const [codeErr, setCodeErr] = useState(false);
 
-  // 3-qadam (Forgot Password)
-  const [forgotStep, setForgotStep] = useState<0 | 1 | 2>(0); // 0 - yopiq, 1 - email, 2 - kod + yangi parol
+  const [forgotStep, setForgotStep] = useState<0 | 1 | 2>(0);
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotCode, setForgotCode] = useState('');
   const [forgotNewPassword, setForgotNewPassword] = useState('');
   const [forgotUserId, setForgotUserId] = useState('');
   const [forgotLoading, setForgotLoading] = useState(false);
 
-  const root = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const prevLang = useRef<Lang>(lang);
-
-  useEffect(() => {
-    document.title = t.pageTitle;
-  }, [t.pageTitle]);
-
-  // GSAP animatsiyalar
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-      tl.from('.lg-word', { yPercent: 120, duration: 1, stagger: 0.08 })
-        .from('.lg-fade', { y: 24, opacity: 0, duration: 0.8, stagger: 0.1 }, '-=0.6')
-        .from('.lg-chip', { scale: 0.6, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'back.out(1.8)' }, '-=0.7')
-        .from(cardRef.current, { y: 50, opacity: 0, scale: 0.94, duration: 1 }, 0.15)
-        .from('.lg-field', { y: 18, opacity: 0, duration: 0.6, stagger: 0.09 }, '-=0.6');
-
-      gsap.to('.lg-chip', {
-        y: 'random(-14, 14)',
-        x: 'random(-8, 8)',
-        rotation: 'random(-5, 5)',
-        duration: 'random(3, 5)',
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        stagger: 0.3,
-      });
-    }, root);
-    return () => ctx.revert();
-  }, []);
-
-  const shake = () => {
-    if (!cardRef.current) return;
-    gsap.fromTo(cardRef.current, { x: -14 }, { x: 0, duration: 0.7, ease: 'elastic.out(1, 0.25)' });
-  };
-
-  const playExit = () =>
-    new Promise<void>((resolve) => {
-      if (!cardRef.current) return resolve();
-      gsap.to(root.current, { opacity: 0, duration: 0.4, delay: 0.15 });
-      gsap.to(cardRef.current, {
-        scale: 0.95,
-        y: -24,
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power3.in',
-        onComplete: () => resolve(),
-      });
-    });
-
   const onPassKey = (e: KeyboardEvent<HTMLInputElement>) => {
     setCaps(e.getModifierState('CapsLock'));
   };
 
-  // ==================== 1-QADAM: LOGIN ====================
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     if (loading || success) return;
@@ -271,7 +201,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     setErrKey(null);
 
     if (!okEmail || !okPass) {
-      shake();
       return;
     }
 
@@ -286,7 +215,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
       if (!res.ok) {
         setErrKey(res.status === 400 ? 'generic' : 'invalid');
-        shake();
         return;
       }
 
@@ -299,13 +227,11 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       } catch {}
     } catch (err) {
       setErrKey('network');
-      shake();
     } finally {
       setLoading(false);
     }
   };
 
-  // ==================== 2-QADAM: 2FA ====================
   const handleVerifyCode = async (e: FormEvent) => {
     e.preventDefault();
     if (loading || success) return;
@@ -313,7 +239,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     const cleanCode = sanitizeInput(code);
     if (cleanCode.length !== 6) {
       setCodeErr(true);
-      shake();
       return;
     }
 
@@ -333,97 +258,32 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       if (!res.ok) {
         setErrKey('codeInvalid');
         setCodeErr(true);
-        shake();
         return;
       }
 
       localStorage.setItem('admin_user', JSON.stringify(data));
       setSuccess(true);
-      await playExit();
       onLogin?.();
       navigate('/');
     } catch (err) {
       setErrKey('network');
-      shake();
     } finally {
       setLoading(false);
     }
   };
 
-  // ==================== 3-QADAM: FORGOT PASSWORD ====================
-  const handleForgotRequest = async () => {
-    const cleanEmail = sanitizeInput(forgotEmail);
-    if (!/^\S+@\S+\.\S+$/.test(cleanEmail)) {
-      setEmailErr(true);
-      return;
-    }
-    setForgotLoading(true);
-    try {
-      const res = await fetch(`${API_URL}/auth/forgot-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: cleanEmail }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setForgotUserId(data.userId);
-        setForgotStep(2);
-      } else {
-        alert(data.error || 'Xatolik yuz berdi');
-      }
-    } catch {
-      alert('Serverga ulanib bo\'lmadi');
-    } finally {
-      setForgotLoading(false);
-    }
-  };
-
-  const handleResetPassword = async () => {
-    const cleanCode = sanitizeInput(forgotCode);
-    const cleanPass = forgotNewPassword;
-    if (cleanCode.length !== 6 || cleanPass.length < 6) {
-      alert('Kod 6 xonali, parol esa kamida 6 belgidan iborat bo\'lishi kerak');
-      return;
-    }
-    setForgotLoading(true);
-    try {
-      const res = await fetch(`${API_URL}/auth/reset-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: forgotUserId, code: cleanCode, newPassword: cleanPass }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert(t.resetSuccess);
-        setForgotStep(0);
-        setForgotCode('');
-        setForgotNewPassword('');
-        setPassword('');
-        setStep(1);
-      } else {
-        alert(data.error || 'Xatolik yuz berdi');
-      }
-    } catch {
-      alert('Serverga ulanib bo\'lmadi');
-    } finally {
-      setForgotLoading(false);
-    }
-  };
-
   return (
-    <div ref={root} className="relative min-h-screen overflow-hidden">
-      <Aurora />
-      <Snowfall />
-      <div className="bg-grid pointer-events-none absolute inset-0 z-0" />
+    <div className="relative min-h-screen overflow-hidden bg-[#07080b]">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#07080b] to-[#1a0a0d]" />
+      <div className="bg-grid pointer-events-none absolute inset-0 z-0 opacity-20" />
 
       <div className="absolute right-4 top-4 z-30 sm:right-6 sm:top-6">
         <LangSwitch lang={lang} setLang={setLang} />
       </div>
 
       <div className="relative z-10 grid min-h-screen lg:grid-cols-[1.15fr_1fr]">
-        {/* CHAP TOMON */}
         <div className="relative hidden flex-col justify-between p-12 lg:flex xl:p-16">
-          <div className="lg-fade flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ff2b3a] to-[#9d0410] shadow-[0_14px_40px_-10px_rgba(255,43,58,0.8)]">
               <ShieldCheck className="h-6 w-6 text-white" />
             </div>
@@ -434,31 +294,29 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           </div>
 
           <div className="max-w-2xl">
-            <div className="lg-fade lg-i18n mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-zinc-300 backdrop-blur">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-zinc-300 backdrop-blur">
               <Sparkles className="h-3.5 w-3.5 text-[#ff6b75]" />
               {t.badge}
             </div>
 
-            <h1 key={lang} className="text-[56px] font-black leading-[1.02] tracking-tight xl:text-[72px]">
+            <h1 className="text-[56px] font-black leading-[1.02] tracking-tight xl:text-[72px]">
               {t.headline.split(' ').map((w, i) => (
-                <span key={i} className="mr-[0.22em] inline-block overflow-hidden align-bottom">
-                  <span className={`lg-word inline-block ${i > 0 ? 'text-grad' : 'text-white'}`}>{w}</span>
+                <span key={i} className="mr-[0.22em] inline-block align-bottom">
+                  <span className={`inline-block ${i > 0 ? 'text-grad' : 'text-white'}`}>{w}</span>
                 </span>
               ))}
             </h1>
 
-            <p className="lg-fade lg-i18n mt-6 max-w-lg text-base leading-relaxed text-zinc-400">{t.sub}</p>
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-zinc-400">{t.sub}</p>
           </div>
 
-          <p className="lg-fade text-xs text-zinc-600">© {new Date().getFullYear()} Mobiuz</p>
+          <p className="text-xs text-zinc-600">© {new Date().getFullYear()} Mobiuz</p>
         </div>
 
-        {/* O'NG TOMON */}
         <div className="flex items-center justify-center p-5 pt-20 sm:p-8 sm:pt-24 lg:pt-8">
-          <div ref={cardRef} className="glass w-full max-w-[440px] rounded-[32px] p-7 sm:p-10 relative overflow-hidden">
+          <div className="glass w-full max-w-[440px] rounded-[32px] p-7 sm:p-10 relative overflow-hidden">
             
             <AnimatePresence mode="wait">
-              {/* ==================== FORGOT PASSWORD ==================== */}
               {forgotStep > 0 ? (
                 <motion.div
                   key="forgot"
@@ -498,7 +356,26 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                         </div>
                       </div>
                       <button
-                        onClick={handleForgotRequest}
+                        onClick={async () => {
+                          const cleanEmail = sanitizeInput(forgotEmail);
+                          if (!/^\S+@\S+\.\S+$/.test(cleanEmail)) return;
+                          setForgotLoading(true);
+                          try {
+                            const res = await fetch(`${API_URL}/auth/forgot-password`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ email: cleanEmail }),
+                            });
+                            const data = await res.json();
+                            if (res.ok) {
+                              setForgotUserId(data.userId);
+                              setForgotStep(2);
+                            } else {
+                              alert(data.error || 'Xatolik');
+                            }
+                          } catch { alert('Tarmoq xatosi'); }
+                          finally { setForgotLoading(false); }
+                        }}
                         disabled={forgotLoading}
                         className="btn btn-primary w-full py-4 mt-2"
                       >
@@ -537,7 +414,28 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                         </div>
                       </div>
                       <button
-                        onClick={handleResetPassword}
+                        onClick={async () => {
+                          const cleanCode = sanitizeInput(forgotCode);
+                          if (cleanCode.length !== 6 || forgotNewPassword.length < 6) return;
+                          setForgotLoading(true);
+                          try {
+                            const res = await fetch(`${API_URL}/auth/reset-password`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ userId: forgotUserId, code: cleanCode, newPassword: forgotNewPassword }),
+                            });
+                            const data = await res.json();
+                            if (res.ok) {
+                              alert(t.resetSuccess);
+                              setForgotStep(0);
+                              setForgotCode('');
+                              setForgotNewPassword('');
+                              setPassword('');
+                              setStep(1);
+                            } else { alert(data.error || 'Xatolik'); }
+                          } catch { alert('Tarmoq xatosi'); }
+                          finally { setForgotLoading(false); }
+                        }}
                         disabled={forgotLoading}
                         className="btn btn-primary w-full py-4 mt-2"
                       >
@@ -547,7 +445,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                   )}
                 </motion.div>
               ) : step === 1 ? (
-                // ==================== 1-QADAM: LOGIN ====================
                 <motion.div
                   key="step1"
                   initial={{ opacity: 0, x: -20 }}
@@ -660,7 +557,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                   </form>
                 </motion.div>
               ) : (
-                // ==================== 2-QADAM: 2FA ====================
                 <motion.div
                   key="step2"
                   initial={{ opacity: 0, x: 20 }}
