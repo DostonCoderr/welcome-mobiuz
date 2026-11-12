@@ -239,7 +239,18 @@ export const deleteNotification = (id: string) => api.delete(`/notifications/${i
 // ==================== PROFILE ====================
 
 // Profilni olish
-export const getMe = () => api.get('/auth/me').then(res => res.data);
+export const getMe = async () => {
+  try {
+    const { data } = await api.get('/auth/me');
+    return data;
+  } catch (error: any) {
+    // Agar 401 bo'lsa, shunchaki null qaytaramiz (xato tashlamaymiz)
+    if (error.response?.status === 401) {
+      return null;
+    }
+    throw error;
+  }
+};
 
 // Profilni yangilash
 export const updateProfile = (data: { name?: string; phone?: string; avatar?: string }) =>
